@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="scan-action-header">
+    <div class="scan-action-header align_center">
         <div class="scan-action-left">
             Please scan the QR code on the attendee's badge
         </div>
@@ -27,6 +27,12 @@
             </div>
         </div>
 
+    </div>
+
+    <div v-if="fetching" 
+        class="align_center" 
+        style="margin-top: 23px; color: green;">
+        Searching for attendee...
     </div>
 
     <!-- attendee profile -->
@@ -291,7 +297,6 @@ export default {
     border-radius: 50%;
 }
 .align_center {
-    /* text-align: center; */
     display: flex;
     justify-content: center;
     align-items: center;

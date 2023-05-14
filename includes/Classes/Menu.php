@@ -33,11 +33,11 @@ class Menu
             $menuPermission,
             'admin.php?page=scan-attendee.php#/',
         );
-        $submenu['scan-attendee.php']['settings'] = array(
-            __('Settings', 'textdomain'),
-            $menuPermission,
-            'admin.php?page=scan-attendee.php#/settings',
-        );
+        // $submenu['scan-attendee.php']['settings'] = array(
+        //     __('Settings', 'textdomain'),
+        //     $menuPermission,
+        //     'admin.php?page=scan-attendee.php#/settings',
+        // );
         $submenu['scan-attendee.php']['supports'] = array(
             __('Supports', 'textdomain'),
             $menuPermission,
