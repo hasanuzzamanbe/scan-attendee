@@ -11,11 +11,20 @@
     <hr />
     <div v-show="!isActive" style="display: flex;
         align-items: center;
-        justify-content: center; margin:32px 0px 32px 0px;">
-        <el-button  size="small" type="primary" id="start-button" 
-        style="" @click="start">Scan by camera</el-button>
-        <el-button  size="small" type="info" id="start-button" 
-        style="" @click="findManually">Input Manually?</el-button>
+        justify-content: center; margin:10px 0px 10px 0px;">
+
+        <el-button class="scan_camera_button" icon="el-icon-camera-solid" size="small" type="primary" id="start-button" 
+        style="" @click="start"></el-button>
+
+        <div class="scan_manual_wrap scan_manual_button">
+            <el-button class="scan_stats_button" size="small" type="info" id="start-button" 
+            style="" @click="showStats = true" icon="el-icon-info"></el-button>
+
+            <el-button class="scan_manual_button" icon="el-icon-search" size="small" type="info" id="start-button" 
+            style="" @click="findManually"></el-button>      
+        </div>
+        
+
     </div>
     <div class="align_center">
         <div>
@@ -106,11 +115,16 @@
             <el-button :disabled="fetching" type="primary" @click="getAttendee">Search</el-button>
         </span>
         </el-dialog>
+
+        <el-dialog width="300px" :visible.sync="showStats">
+            <Stat></Stat>
+        </el-dialog>
   </div>
 </template>
 <script>
 import QrScanner from 'qr-scanner'
 import 'qr-scanner/qr-scanner-worker.min.js'
+import Stat from './Stats.vue';
 export default {
   name: 'Dashboard',
   data () {
@@ -121,10 +135,14 @@ export default {
       showManualInput: false,
       manualInput: '',
       fetching: false,
+      showStats: false,
       attendee: {
       },
       scanId: ''
     }
+  },
+  components: {
+    Stat
   },
   methods: {
     addNote() {
@@ -201,7 +219,6 @@ export default {
             });
     },
     fetch(attendeeId) {
-        console.log('fetching')
         this.fetching = true;
         this.$get({
                 action: 'scan_attendee_admin_ajax',
@@ -261,7 +278,7 @@ export default {
   background: white;
   padding: 3px 10px;
   width: 424px;
-  box-shadow: 0px 0px 4px #ccc;
+  box-shadow: inset 0px 0px 4px 2px #ccc;
   text-align: center;
 }
 .scan-action-header {
@@ -300,5 +317,24 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.scan_camera_button {
+    z-index: 999;
+    position: fixed;
+    bottom: 10px;
+    width: 100px;
+    font-size: 36px !important;
+    height: 100px;
+    border-radius: 50% !important;
+    right: 5px;
+    box-shadow: -4px 2px 6px 3px #ccc;
+    border: 2px solid white !important;
+}
+.scan_manual_wrap {
+    z-index: 999;
+    position: fixed;
+    bottom: 30px;
+    font-size: 14px !important;
+    /* border: 2px solid white !important; */
 }
 </style>

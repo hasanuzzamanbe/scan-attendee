@@ -16,6 +16,7 @@ class AdminAjaxHandler
             'get_attendee' => 'getAttendee',
             'update_attendee' => 'updateAttendee',
             'add_note' => 'addNote',
+            'get_info' => 'getInfo'
         );
 
         if (isset($validRoutes[$route])) {
@@ -23,6 +24,17 @@ class AdminAjaxHandler
             return $this->{$validRoutes[$route]}();
         }
         do_action('scan-attendee/admin_ajax_handler_catch', $route);
+    }
+
+    public function getInfo()
+    {
+        $info = (new AttendeeModel())->getInfo();
+
+        wp_send_json_success(
+            array(
+                'info' => $info
+            )
+        );
     }
 
     public function addNote()

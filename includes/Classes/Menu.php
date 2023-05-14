@@ -28,8 +28,8 @@ class Menu
             25
         );
 
-        $submenu['scan-attendee.php']['my_profile'] = array(
-            __('Plugin Dashboard', 'textdomain'),
+        $submenu['scan-attendee.php']['scan'] = array(
+            __('Scan Attendee', 'textdomain'),
             $menuPermission,
             'admin.php?page=scan-attendee.php#/',
         );
@@ -38,10 +38,10 @@ class Menu
         //     $menuPermission,
         //     'admin.php?page=scan-attendee.php#/settings',
         // );
-        $submenu['scan-attendee.php']['supports'] = array(
-            __('Supports', 'textdomain'),
+        $submenu['scan-attendee.php']['stats'] = array(
+            __('Stats', 'textdomain'),
             $menuPermission,
-            'admin.php?page=scan-attendee.php#/supports',
+            'admin.php?page=scan-attendee.php#/stats',
         );
     }
 

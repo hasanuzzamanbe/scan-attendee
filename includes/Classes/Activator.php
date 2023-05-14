@@ -66,7 +66,7 @@ class Activator
             `breakfast` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `lunch` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `update_by` int NOT NULL,
-            `update_at` datetime NOT NULL,
+            `update_at` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             PRIMARY KEY (`id`)
         ) $charset_collate;";
 

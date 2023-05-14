@@ -28,24 +28,21 @@ class AttendeeModel
         return $result;
     }
 
-    public function searchBy($eventId, $searchQuery)
+    public function getInfo()
     {
-        //search from data using $searchQuery
         global $wpdb;
-        $table_name = $wpdb->prefix . 'speakers';
-        $sql = "SELECT * FROM $table_name WHERE event_id = " . $eventId . " WHERE name LIKE '%$searchQuery%' OR email LIKE '%$searchQuery%' OR phone LIKE '%$searchQuery%' OR username LIKE '%$searchQuery%' OR social LIKE '%$searchQuery%' OR type LIKE '%$searchQuery%' OR topic LIKE '%$searchQuery%' OR description LIKE '%$searchQuery%' OR cospeakers LIKE '%$searchQuery%' OR audience LIKE '%$searchQuery%' OR experience LIKE '%$searchQuery%' OR question LIKE '%$searchQuery%' OR consent LIKE '%$searchQuery%' OR ip LIKE '%$searchQuery%' Limit 10";
+        $table_name = $wpdb->prefix . 'scan_attendee_list';
+        
+        // count checkin = yes as checked_in and breakfast = yes as has_breakfast
+        $sql = "SELECT COUNT(*) as total,
+            SUM(CASE WHEN checkin = 'yes' THEN 1 ELSE 0 END) as checked_in, 
+            SUM(CASE WHEN breakfast = 'yes' THEN 1 ELSE 0 END) as has_breakfast,
+            SUM(CASE WHEN lunch = 'yes' THEN 1 ELSE 0 END) as has_lunch
+            FROM $table_name";
 
-        $results = $wpdb->get_results($sql);
+        $result = $wpdb->get_row($sql);
 
-        $suggestion = array();
-        foreach ($results as $key => $value) {
-            $suggestion[] = array(
-                'label' => $value->topic,
-                'value' => $value->topic
-            );
-        }
-
-        return $suggestion;
+        return $result;
     }
 
     public function update($attendeeId, $type, $value)
