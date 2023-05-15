@@ -57,7 +57,7 @@
     </div>
 
     <el-dialog
-        v-loading="!fetching"
+        v-loading="fetching"
         loading-icon="el-icon-loading"
         loading-text="Feching"
         title="Attendee Id"
@@ -66,7 +66,7 @@
         center>
         <div style="display: flex;
             justify-content: center;">
-            <input @keyup.enter="getAttendee" style="min-height: 45px;width: 300px;" autofocus placeholder="Enter Id" type="text" v-model="manualInput">
+            <input @keyup.enter="getAttendee" clearable style="min-height: 45px;width: 300px;" autofocus placeholder="Enter Id" type="text" v-model="manualInput">
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="showManualInput = false">Cancel</el-button>
@@ -126,27 +126,6 @@ export default {
           })
         })
     },
-    // addNote() {
-    //     this.$post({
-    //             action: 'scan_attendee_admin_ajax',
-    //             route: 'add_note',
-    //             attendee_id: this.attendee?.attendee_id,
-    //             note: this.attendee?.comment
-    //         }).then(response => {
-    //             this.$message.success({
-    //                 message: response.data.message,
-    //                 offset: 50
-    //             })
-    //         }).always(() => {
-    //             // this.fetching = false;
-    //         }).fail(error => {
-    //             console.log(error)
-    //             this.$message.error({
-    //                 message: error.responseJSON.data,
-    //                 offset: 100
-    //             })
-    //         });
-    // },
     findManually() {
         this.showManualInput = true;
         document.getElementById('cam-qr-result').textContent = 'No QR scanned yet!'
@@ -154,9 +133,6 @@ export default {
     refresh(){
         this.fetch(this.attendee?.attendee_id);
     },
-    // getFullName() {
-    //     return this.attendee?.first_name + ' ' + this.attendee?.last_name
-    // },
     init () {
       const video = document.getElementById('qr-video')
       const camQrResult = document.getElementById('cam-qr-result')
@@ -216,6 +192,7 @@ export default {
                     duration: 1000
                 })
             }).fail(error => {
+                this.fetching = false;
                 console.log(error)
                 this.$message.error({
                     message: error.responseJSON.data,
@@ -267,7 +244,8 @@ export default {
     font-size: 12px;
 }
 div#scan-attendee_app {
-    max-width: 400px;
+    /* max-width: 400px; */
+    max-width: 600px;
     margin: 5px auto;
     border: 1px solid #ccc;
     height: 95vh;
