@@ -38,10 +38,10 @@ class Menu
         //     $menuPermission,
         //     'admin.php?page=scan-attendee.php#/settings',
         // );
-        $submenu['scan-attendee.php']['stats'] = array(
-            __('Stats', 'textdomain'),
+        $submenu['scan-attendee.php']['attendees'] = array(
+            __('Attendees', 'textdomain'),
             $menuPermission,
-            'admin.php?page=scan-attendee.php#/stats',
+            'admin.php?page=scan-attendee.php#/attendees',
         );
     }
 

@@ -16,7 +16,8 @@ class AdminAjaxHandler
             'get_attendee' => 'getAttendee',
             'update_attendee' => 'updateAttendee',
             'add_note' => 'addNote',
-            'get_info' => 'getInfo'
+            'get_info' => 'getInfo',
+            'get_attendees' => 'getAttendees',
         );
 
         if (isset($validRoutes[$route])) {
@@ -24,6 +25,15 @@ class AdminAjaxHandler
             return $this->{$validRoutes[$route]}();
         }
         do_action('scan-attendee/admin_ajax_handler_catch', $route);
+    }
+
+    public function getAttendees()
+    {
+        $attendees = (new AttendeeModel())->getAttendees();
+
+        wp_send_json_success(
+            $attendees
+        );
     }
 
     public function getInfo()
@@ -49,7 +59,7 @@ class AdminAjaxHandler
         $note = sanitize_text_field($_REQUEST['note']);
 
         $res = (new AttendeeModel())->addNoteToAttendee($attendeeId, $note);
-        
+
         if (!$res) {
             wp_send_json_error('No updated!', 400);
         }
@@ -74,7 +84,7 @@ class AdminAjaxHandler
         $value = sanitize_text_field($_REQUEST['value']);
 
         $res = (new AttendeeModel())->update($attendeeId, $type, $value);
-        
+
         if (!$res) {
             wp_send_json_error('No updated!', 400);
         }

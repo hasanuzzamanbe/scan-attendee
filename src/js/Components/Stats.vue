@@ -45,35 +45,14 @@ export default {
   data () {
     return {
       fetching: false,
-      info: {
-      }
     }
   },
-  methods: {
-    getInfo () {
-      this.fetching = true
-      this.$get({
-        action: 'scan_attendee_admin_ajax',
-        route: 'get_info'
-      })
-        .then(response => {
-          this.info = response.data.info
-          this.fetching = false
-        })
-        .always(() => {
-          this.fetching = false
-        })
-        .fail(error => {
-          this.$message.error({
-            message: error.responseJSON.data,
-            offset: 100
-          })
-        })
-    }
+  props: {
+    info: {
+      type: Object,
+      default: () => {}
+    },
   },
-  mounted () {
-    this.getInfo()
-  }
 }
 </script>
 <style>
@@ -81,6 +60,7 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  min-width: 255px;
 }
 
 #attendee_info td,

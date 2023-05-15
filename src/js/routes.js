@@ -1,6 +1,6 @@
 import Dashboard from './Components/Dashboard';
 import Settings from './Components/Settings';
-import Stats from './Components/Stats';
+import Attendees from './Components/StatsInfo';
 
 export const routes = [
     {
@@ -14,8 +14,8 @@ export const routes = [
         component: Settings
     },
     {
-        path: '/stats',
-        name: 'stats',
-        component: Stats
+        path: '/attendees',
+        name: 'attendees',
+        component: Attendees
     }
 ];

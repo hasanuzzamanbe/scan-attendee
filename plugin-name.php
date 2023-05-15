@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) {
 }
 if (!defined('SCANATTENDEE_VERSION')) {
     define('SCANATTENDEE_VERSION_LITE', true);
-    define('SCANATTENDEE_VERSION', '1.1.0');
+    define('SCANATTENDEE_VERSION', '1.0.0');
     define('SCANATTENDEE_MAIN_FILE', __FILE__);
     define('SCANATTENDEE_URL', plugin_dir_url(__FILE__));
     define('SCANATTENDEE_DIR', plugin_dir_path(__FILE__));

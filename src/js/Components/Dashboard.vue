@@ -20,13 +20,16 @@
             <el-button class="scan_stats_button" size="small" type="info" id="start-button" 
             style="" @click="showStats = true" icon="el-icon-info"></el-button>
 
+            <el-button class="scan_stats_button" size="small" type="info" id="start-button" 
+            style="" @click="$router.push('attendees')" icon="el-icon-s-grid"></el-button>
+
             <el-button class="scan_manual_button" icon="el-icon-search" size="small" type="info" id="start-button" 
             style="" @click="findManually"></el-button>      
         </div>
         
 
     </div>
-    <div class="align_center">
+    <div style="text-align: center;">
         <div>
             <!-- <b>Detected QR code: </b> -->
             <div class="scan-result">
@@ -44,53 +47,8 @@
         Searching for attendee...
     </div>
 
-    <!-- attendee profile -->
-    <div class="scan_attendee_profile_container align_center">
-        <div v-if="attendee.attendee_id" class="scan_attendee_profile">
-            <h4 class="name">{{ getFullName() }}
-                <span style="color: green;margin-left:4px;">({{ attendee.attendee_id }})</span>
-                <i style="cursor:pointer; float: right;" class="el-icon-refresh" @click="refresh"></i>
-            </h4>
-            <div class="profile_image_section">
-                <div>
-                    <p class="email">{{ attendee.email }}</p>
-                    <p class="ticket-type">{{ attendee.ticket_type }}</p>        
-                </div>
-                <div>
-                    <img v-if="attendee.gravatar" :src="attendee.gravatar" alt="profile">
-                </div>
-
-            </div>
-            <p class="t-shirt-size">T-shirt: {{ attendee.t_shirt_size }}</p>
-            <div class="action" style="margin-bottom: 23px;">
-                <div>
-                    <input type="checkbox" @change="update" id="checkin" v-model="attendee.checkin" true-value="yes" false-value="no"/>
-                    <label for="checkin">Check-in</label> 
-                </div>
-
-                <div>
-                    <input type="checkbox" @change="update" id="breakfast" v-model="attendee.breakfast" true-value="yes" false-value="no"/>
-                    <label for="breakfast">Breakfast</label>     
-                </div>
-
-                <div>
-                    <input type="checkbox" @change="update" id="lunch" v-model="attendee.lunch" true-value="yes" false-value="no"/>
-                    <label for="lunch">Lunch</label> 
-                </div>
-
-            </div>
-
-            <el-input placeholder="Note(optional)" class="comment" v-model="attendee.comment">
-                <el-button slot="append" icon="el-icon-check" @click="addNote"></el-button>
-            </el-input>
-            <span v-if="attendee.update_by_agent" style="color: #ababab;
-                font-size: 12px;
-                font-style: italic;">
-                Last update by: {{ attendee.update_by_agent }}
-            </span>
-        </div> 
-    </div>
-
+    <attendee-profile 
+     @refresh="refresh" :attendee="attendee"></attendee-profile>
 
     <br />
     <div id="video-container">
@@ -108,7 +66,7 @@
         center>
         <div style="display: flex;
             justify-content: center;">
-            <input style="min-height: 45px;width: 300px;" autofocus placeholder="Enter Id" type="text" v-model="manualInput">
+            <input @keyup.enter="getAttendee" style="min-height: 45px;width: 300px;" autofocus placeholder="Enter Id" type="text" v-model="manualInput">
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="showManualInput = false">Cancel</el-button>
@@ -116,8 +74,8 @@
         </span>
         </el-dialog>
 
-        <el-dialog width="300px" :visible.sync="showStats">
-            <Stat></Stat>
+        <el-dialog @open="getInfo" width="300px" :visible.sync="showStats">
+            <Stat :info="info"></Stat>
         </el-dialog>
   </div>
 </template>
@@ -125,6 +83,7 @@
 import QrScanner from 'qr-scanner'
 import 'qr-scanner/qr-scanner-worker.min.js'
 import Stat from './Stats.vue';
+import AttendeeProfile from './AttendeeProfile.vue';
 export default {
   name: 'Dashboard',
   data () {
@@ -136,36 +95,58 @@ export default {
       manualInput: '',
       fetching: false,
       showStats: false,
+      info: {},
       attendee: {
       },
       scanId: ''
     }
   },
   components: {
-    Stat
+    Stat,
+    AttendeeProfile
   },
   methods: {
-    addNote() {
-        this.$post({
-                action: 'scan_attendee_admin_ajax',
-                route: 'add_note',
-                attendee_id: this.attendee?.attendee_id,
-                note: this.attendee?.comment
-            }).then(response => {
-                this.$message.success({
-                    message: response.data.message,
-                    offset: 50
-                })
-            }).always(() => {
-                // this.fetching = false;
-            }).fail(error => {
-                console.log(error)
-                this.$message.error({
-                    message: error.responseJSON.data,
-                    offset: 100
-                })
-            });
+    getInfo () {
+      this.fetching = true
+      this.$get({
+        action: 'scan_attendee_admin_ajax',
+        route: 'get_info'
+      })
+        .then(response => {
+          this.info = response.data.info
+          this.fetching = false
+        })
+        .always(() => {
+          this.fetching = false
+        })
+        .fail(error => {
+          this.$message.error({
+            message: error.responseJSON.data,
+            offset: 100
+          })
+        })
     },
+    // addNote() {
+    //     this.$post({
+    //             action: 'scan_attendee_admin_ajax',
+    //             route: 'add_note',
+    //             attendee_id: this.attendee?.attendee_id,
+    //             note: this.attendee?.comment
+    //         }).then(response => {
+    //             this.$message.success({
+    //                 message: response.data.message,
+    //                 offset: 50
+    //             })
+    //         }).always(() => {
+    //             // this.fetching = false;
+    //         }).fail(error => {
+    //             console.log(error)
+    //             this.$message.error({
+    //                 message: error.responseJSON.data,
+    //                 offset: 100
+    //             })
+    //         });
+    // },
     findManually() {
         this.showManualInput = true;
         document.getElementById('cam-qr-result').textContent = 'No QR scanned yet!'
@@ -173,9 +154,9 @@ export default {
     refresh(){
         this.fetch(this.attendee?.attendee_id);
     },
-    getFullName() {
-        return this.attendee?.first_name + ' ' + this.attendee?.last_name
-    },
+    // getFullName() {
+    //     return this.attendee?.first_name + ' ' + this.attendee?.last_name
+    // },
     init () {
       const video = document.getElementById('qr-video')
       const camQrResult = document.getElementById('cam-qr-result')
@@ -275,11 +256,24 @@ export default {
 </script>
 <style>
 .scan-result {
-  background: white;
-  padding: 3px 10px;
-  width: 424px;
-  box-shadow: inset 0px 0px 4px 2px #ccc;
-  text-align: center;
+    background: #fff;
+    padding: 3px 10px;
+    box-shadow: inset 0px 6px 6px 0px #ccc;
+    text-align: center;
+}
+.scan-action-left {
+    color: #989393;
+    padding-top: 4px;
+    font-size: 12px;
+}
+div#scan-attendee_app {
+    max-width: 400px;
+    margin: 5px auto;
+    border: 1px solid #ccc;
+    height: 95vh;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 14px;
+    background: #f7f2ec;
 }
 .scan-action-header {
     display: flex;
@@ -289,10 +283,10 @@ export default {
 }
 .scan_attendee_profile {
     width: 400px;
-    border: 1px solid #dfdfdf;
+    /* border: 1px solid #dfdfdf; */
     padding: 21px;
     margin-top: 12px;
-    box-shadow: 1px 0px 6px 0px #ccc;
+    /* box-shadow: 1px 0px 6px 0px #ccc; */
 }
 
 .scan_attendee_profile div.action {
@@ -322,9 +316,9 @@ export default {
     z-index: 999;
     position: fixed;
     bottom: 10px;
-    width: 100px;
+    width: 84px;
     font-size: 36px !important;
-    height: 100px;
+    height: 84px;
     border-radius: 50% !important;
     right: 5px;
     box-shadow: -4px 2px 6px 3px #ccc;

@@ -28,6 +28,48 @@ class AttendeeModel
         return $result;
     }
 
+    public function getAttendees()
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'scan_attendee_list';
+
+        $pagination =  [
+            'current_page' =>  1,
+            'per_page' => 20,
+            'page_number' =>  1,
+            'total' => 0
+        ];
+
+        $search = $_REQUEST['search'] ? $_REQUEST['search'] : '';
+
+        $pagination = $_REQUEST['pagination'] ? $_REQUEST['pagination'] : $pagination;
+
+        $offset = ($pagination['current_page'] - 1) * $pagination['per_page'];
+
+        $sql = "SELECT * FROM $table_name WHERE first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR email LIKE '%$search%' OR ticket_type LIKE '%$search%' LIMIT $offset, " . $pagination['per_page'];
+
+        $results = $wpdb->get_results($sql);
+
+        foreach ($results as $result) {
+            if ($result->email) {
+                $result->gravatar = get_avatar_url(sanitize_email($result->email));
+            }
+
+            if ($result->update_by) {
+                $result->update_by_agent = get_user_by('id', $result->update_by)->display_name;
+            }
+        }
+
+        //get total
+        $sql = "SELECT COUNT(*) as total FROM $table_name";
+        $total = $wpdb->get_row($sql);
+
+        return array(
+            'attendees' => $results,
+            'total' => $total->total,
+        );
+    }
+
     public function getInfo()
     {
         global $wpdb;
