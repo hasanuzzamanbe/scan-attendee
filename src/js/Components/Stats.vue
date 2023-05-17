@@ -4,33 +4,27 @@
       <div>
         <h1>Stats</h1>
         <hr />
-        <div v-if="fetching">Getting info....</div>
-
         <!-- table to show info -->
         <div class="align_center">
-          <table id="attendee_info">
+          <table v-loading="fetching" id="attendee_info">
             <tr>
               <th>Category</th>
               <th>Quantity</th>
             </tr>
             <tr>
-              <td>Checked-in</td>
-              <td>{{ info.checked_in }}</td>
+              <td>T shirt</td>
+              <td>{{ info.has_tshirt }}</td>
             </tr>
             <tr>
-              <td>Not checked-in</td>
-              <td>{{ info.total - info.checked_in }}</td>
+              <td>Swag</td>
+              <td>{{ info.has_swag }}</td>
             </tr>
             <tr>
-              <td>Breakfast</td>
-              <td>{{ info.has_breakfast }}</td>
+              <td>Gift box</td>
+              <td>{{ info.has_giftbox }}</td>
             </tr>
             <tr>
-              <td>Lunch</td>
-              <td>{{ info.has_lunch }}</td>
-            </tr>
-            <tr>
-              <td>Total</td>
+              <td>Total Attendee</td>
               <td>{{ info.total }}</td>
             </tr>
           </table>
@@ -42,16 +36,15 @@
 <script>
 export default {
   name: 'Supports',
-  data () {
-    return {
-      fetching: false,
-    }
-  },
   props: {
     info: {
       type: Object,
       default: () => {}
     },
+    fetching: {
+      type: Boolean,
+      default: false
+    }
   },
 }
 </script>

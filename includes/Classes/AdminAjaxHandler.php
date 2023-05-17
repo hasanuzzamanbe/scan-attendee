@@ -14,8 +14,10 @@ class AdminAjaxHandler
 
         $validRoutes = array(
             'get_attendee' => 'getAttendee',
+            'add_attendee' => 'addAttendee',
             'update_attendee' => 'updateAttendee',
-            'add_note' => 'addNote',
+            'add_email' => 'addEmail',
+            'add_name' => 'addName',
             'get_info' => 'getInfo',
             'get_attendees' => 'getAttendees',
             'upload_csv' => 'uploadCsv',
@@ -26,6 +28,33 @@ class AdminAjaxHandler
             return $this->{$validRoutes[$route]}();
         }
         do_action('scan-attendee/admin_ajax_handler_catch', $route);
+    }
+
+    public function addAttendee()
+    {
+        if (!isset($_REQUEST['attendee_id'])) {
+            wp_send_json_error(array(
+                'message' => __('Please input attendee id!', 'textdomain'),
+            ));
+        };
+
+        $attendeeId = sanitize_text_field($_REQUEST['attendee_id']);
+
+        $res = (new AttendeeModel())->addAttendee($attendeeId);
+
+        if ($res['found']) {
+            wp_send_json_error(
+                array(
+                    'message' => 'Attendee already collected swags!',
+                    'attendee' => $res['attendee']
+                ),
+                400
+            );
+        }
+
+        wp_send_json_success(
+            $res
+        );
     }
 
     public function getAttendees()
@@ -55,18 +84,18 @@ class AdminAjaxHandler
         );
     }
 
-    public function addNote()
+    public function addEmail()
     {
-        if (!isset($_REQUEST['attendee_id']) || !isset($_REQUEST['note'])) {
+        if (!isset($_REQUEST['attendee_id']) || !isset($_REQUEST['email'])) {
             wp_send_json_error(array(
                 'message' => __('Please input attendee id!', 'textdomain'),
             ));
         };
 
         $attendeeId = sanitize_text_field($_REQUEST['attendee_id']);
-        $note = sanitize_text_field($_REQUEST['note']);
+        $email = sanitize_email($_REQUEST['email']);
 
-        $res = (new AttendeeModel())->addNoteToAttendee($attendeeId, $note);
+        $res = (new AttendeeModel())->addEmailToAttendee($attendeeId, $email);
 
         if (!$res) {
             wp_send_json_error('No updated!', 400);
@@ -74,7 +103,31 @@ class AdminAjaxHandler
 
         wp_send_json_success(
             array(
-                'message' => 'Note added!',
+                'message' => 'Email added!',
+            )
+        );
+    }
+
+    public function addName()
+    {
+        if (!isset($_REQUEST['attendee_id']) || !isset($_REQUEST['first_name'])) {
+            wp_send_json_error(array(
+                'message' => __('Please input attendee id!', 'textdomain'),
+            ));
+        };
+
+        $attendeeId = sanitize_text_field($_REQUEST['attendee_id']);
+        $firstName = sanitize_text_field($_REQUEST['first_name']);
+
+        $res = (new AttendeeModel())->addNameAttendee($attendeeId, $firstName);
+
+        if (!$res) {
+            wp_send_json_error('No updated!', 400);
+        }
+
+        wp_send_json_success(
+            array(
+                'message' => 'Name added!',
             )
         );
     }

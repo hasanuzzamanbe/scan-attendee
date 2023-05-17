@@ -20,10 +20,7 @@
             <el-button class="scan_stats_button" size="small" type="info" id="start-button" 
             style="" @click="showStats = true" icon="el-icon-info"></el-button>
 
-            <el-button class="scan_stats_button" size="small" type="info" id="start-button" 
-            style="" @click="$router.push('attendees')" icon="el-icon-s-grid"></el-button>
-
-            <el-button class="scan_manual_button" icon="el-icon-search" size="small" type="info" id="start-button" 
+            <el-button class="scan_manual_button" icon="el-icon-plus" size="small" type="info" id="start-button" 
             style="" @click="findManually"></el-button>      
         </div>
         
@@ -50,6 +47,11 @@
     <attendee-profile 
      @refresh="refresh" :attendee="attendee"></attendee-profile>
 
+     <div class="lastError" v-if="lastError">
+        {{ lastError }} <span style="text-decoration: underline; cursor: pointer;" v-if="scanId" @click="fetch(scanId)">View History</span>
+
+    </div>
+
     <br />
     <div id="video-container">
       <video id="qr-video"></video>
@@ -66,16 +68,16 @@
         center>
         <div style="display: flex;
             justify-content: center;">
-            <input @keyup.enter="getAttendee" clearable style="min-height: 45px;width: 300px;" autofocus placeholder="Enter Id" type="text" v-model="manualInput">
+            <input @keyup.enter="addNew" clearable style="min-height: 45px;width: 300px;" autofocus placeholder="Enter Id" type="text" v-model="manualInput">
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="showManualInput = false">Cancel</el-button>
-            <el-button :disabled="fetching" type="primary" @click="getAttendee">Search</el-button>
+            <el-button :disabled="fetching" type="primary" @click="addNew">Add Attendee</el-button>
         </span>
         </el-dialog>
 
         <el-dialog @open="getInfo" width="300px" :visible.sync="showStats">
-            <Stat :info="info"></Stat>
+            <Stat :info="info" :fetching="fetching"></Stat>
         </el-dialog>
   </div>
 </template>
@@ -98,7 +100,8 @@ export default {
       info: {},
       attendee: {
       },
-      scanId: ''
+      scanId: '',
+      lastError: ''
     }
   },
   components: {
@@ -127,6 +130,7 @@ export default {
         })
     },
     findManually() {
+        this.lastError = '';
         this.showManualInput = true;
         document.getElementById('cam-qr-result').textContent = 'No QR scanned yet!'
     },
@@ -175,6 +179,35 @@ export default {
                 })
             });
     },
+    maybeAdd(attendeeId) {
+        this.attendee = {};
+        this.lastError = '';
+        this.fetching = true;
+        this.$post({
+                action: 'scan_attendee_admin_ajax',
+                route: 'add_attendee',
+                attendee_id: attendeeId,
+            }).then(response => {
+                this.attendee = response.data.attendee
+                this.showManualInput = false;
+                this.$message.success({
+                    message: response.data.message,
+                    duration: 6000,
+                    offset: 50
+                })
+            }).always(() => {
+                this.fetching = false;
+            }).fail(error => {
+                this.fetching = false;
+                console.log(error)
+                this.lastError = error.responseJSON.data.message;
+                this.$message.error({
+                    message: error.responseJSON.data.message,
+                    duration: 3000,
+                    offset: 100
+                })
+            });
+    },
     fetch(attendeeId) {
         this.fetching = true;
         this.$get({
@@ -186,11 +219,6 @@ export default {
                 this.showManualInput = false;
             }).always(() => {
                 this.fetching = false;
-                this.$message.success({
-                    message: 'Attendee fetched',
-                    offset: 50,
-                    duration: 1000
-                })
             }).fail(error => {
                 this.fetching = false;
                 console.log(error)
@@ -200,8 +228,8 @@ export default {
                 })
             });
     },
-    getAttendee() {
-        this.fetch(this.manualInput);
+    addNew() {
+        this.maybeAdd(this.manualInput);
     },
     start () {
         this.scanner.start();
@@ -213,7 +241,8 @@ export default {
       this.isActive = false;
     },
     setResult (label, result) {
-        this.fetch(result.data);
+        this.scanId = result.data;
+        this.maybeAdd(result.data);
         label.textContent = result.data
         if (result !== null) {
             this.stop()
@@ -308,5 +337,10 @@ div#scan-attendee_app {
     bottom: 30px;
     font-size: 14px !important;
     /* border: 2px solid white !important; */
+}
+.lastError {
+    text-align: center;
+    margin-top: 100px;
+    color: red;
 }
 </style>

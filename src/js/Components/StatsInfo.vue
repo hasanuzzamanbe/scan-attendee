@@ -44,6 +44,7 @@
       <el-table-column label="First Name">
         <template slot-scope="scope">
           <span>{{ scope.row.first_name }} {{ scope.row.last_name }}</span>
+          <span v-if="!scope.row.first_name || !scope.row.last_name">-</span>
           <br />
           <span style="font-size: 12px; margin: 0px; color: #9c9b9b">
             {{ scope.row.email }}

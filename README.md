@@ -25,15 +25,15 @@ Import your data to the database table by followings:
 `username` 
 `social`
 `t_shirt_size`
-`checkin` 
-`breakfast`,
-`lunch`,
+`has_giftbox` 
+`has_tshirt`,
+`has_swag`,
 `update_by` (integer)
 
 [![Check Video Shorts](https://img.youtube.com/vi/BQ5uNkJKZAE/0.jpg)](https://www.youtube.com/watch?v=BQ5uNkJKZAE)
 
 https://youtube.com/shorts/BQ5uNkJKZAE
 
-Go to dashboard, scan QR or Input attendee_id manually. This will search attendee and you can manage check-in, breakfast, lunch or add new note about attendee.
+Go to dashboard, scan QR or Input attendee_id manually. This will search attendee and you can manage check-in, has_tshirt, has_swag or add new note about attendee.
 
 If you have multiple volunteer to do that it will store volunteer user Id and show on the bottom who updated last.
