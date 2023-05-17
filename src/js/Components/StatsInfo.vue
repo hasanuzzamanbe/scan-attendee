@@ -72,11 +72,6 @@
     >
       <attendee-profile :attendee="selectedAttendee"></attendee-profile>
     </el-dialog>
-
-    <!-- <el-dialog :visible-sync="viewAttendee">
-      hello
-      <attendee-profile :attendee="selectedAttendee"></attendee-profile>
-    </el-dialog> -->
   </div>
 </template>
 <script>

@@ -24,7 +24,7 @@ class Menu
             $menuPermission,
             'scan-attendee.php',
             array($this, 'enqueueAssets'),
-            'dashicons-admin-site',
+            'dashicons-id',
             25
         );
 
@@ -33,15 +33,15 @@ class Menu
             $menuPermission,
             'admin.php?page=scan-attendee.php#/',
         );
-        // $submenu['scan-attendee.php']['settings'] = array(
-        //     __('Settings', 'textdomain'),
-        //     $menuPermission,
-        //     'admin.php?page=scan-attendee.php#/settings',
-        // );
         $submenu['scan-attendee.php']['attendees'] = array(
             __('Attendees', 'textdomain'),
             $menuPermission,
             'admin.php?page=scan-attendee.php#/attendees',
+        );
+        $submenu['scan-attendee.php']['settings'] = array(
+            __('Settings', 'textdomain'),
+            $menuPermission,
+            'admin.php?page=scan-attendee.php#/settings',
         );
     }
 

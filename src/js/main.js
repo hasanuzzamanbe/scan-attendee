@@ -7,6 +7,7 @@ window.scanAttendee.Vue.mixin({
         addAction: window.scanAttendee.addFilter,
         doAction: window.scanAttendee.doAction,
         $get: window.scanAttendee.$get,
+        $upload: window.scanAttendee.$upload,
         $adminGet: window.scanAttendee.$adminGet,
         $adminPost: window.scanAttendee.$adminPost,
         $post: window.scanAttendee.$post,

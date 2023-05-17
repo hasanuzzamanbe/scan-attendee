@@ -18,6 +18,7 @@ class AdminAjaxHandler
             'add_note' => 'addNote',
             'get_info' => 'getInfo',
             'get_attendees' => 'getAttendees',
+            'upload_csv' => 'uploadCsv',
         );
 
         if (isset($validRoutes[$route])) {
@@ -35,6 +36,13 @@ class AdminAjaxHandler
             $attendees
         );
     }
+
+    public function uploadCsv()
+    {
+        dd('hh');
+        return (new ImportData())->import();
+    }
+
 
     public function getInfo()
     {

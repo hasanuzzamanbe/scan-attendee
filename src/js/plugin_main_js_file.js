@@ -23,7 +23,7 @@ export default class scanAttendee {
     }
 
     $adminGet(options) {
-        options.action = 'scan-attendee_admin_ajax';
+        options.action = 'scan_attendee_admin_ajax';
         return window.jQuery.get(window.scanAttendeeAdmin.ajaxurl, options);
     }
 
@@ -32,7 +32,26 @@ export default class scanAttendee {
     }
 
     $adminPost(options) {
-        options.action = 'scan-attendee_admin_ajax';
+        options.action = 'scan_attendee_admin_ajax';
+        return window.jQuery.post(window.scanAttendeeAdmin.ajaxurl, options);
+    }
+
+    $upload(options, data) {
+        options.data = data;
+        options.action = 'scan_attendee_admin_ajax';
+        return window.jQuery.post(window.scanAttendeeAdmin.ajaxurl, options);
+
+        console.log(options);
+
+        // let data = {
+        //     type: "POST",
+        //     data: options.data,
+        //     route: options.route,
+        //     contentType: false,
+        //     cache: false,
+        //     processData: false
+        // }
+
         return window.jQuery.post(window.scanAttendeeAdmin.ajaxurl, options);
     }
 
