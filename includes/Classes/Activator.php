@@ -62,11 +62,25 @@ class Activator
             `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `social` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `t_shirt_size` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-            `checkin` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-            `breakfast` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-            `lunch` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+            `has_giftbox` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+            `has_tshirt` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+            `has_swag` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `update_by` int NOT NULL,
-            `update_at` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+            `updated_at` TIMESTAMP NULL,
+            PRIMARY KEY (`id`)
+        ) $charset_collate;";
+
+        $this->runSQL($sql, $table_name);
+
+        $table_name = $wpdb->prefix . 'scan_attendee_game_score';
+
+        $sql = "CREATE TABLE $table_name (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `attendee_id`  varchar(100) NOT NULL,
+            `name`  varchar(100) NOT NULL,
+            `email`  varchar(1000) NOT NULL,
+            `score` bigint NOT NULL,
+            `updated_at` TIMESTAMP NULL,
             PRIMARY KEY (`id`)
         ) $charset_collate;";
 
