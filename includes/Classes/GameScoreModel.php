@@ -69,79 +69,12 @@ class GameScoreModel
         return !$result;
     }
 
-
-
-    public function getInfo()
+    public function playersCount()
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'scan_attendee_list';
-
-        // count has_giftbox = yes as checked_in and has_tshirt = yes as has_tshirt
-        $sql = "SELECT COUNT(*) as total,
-            SUM(CASE WHEN has_giftbox = 'yes' THEN 1 ELSE 0 END) as has_giftbox, 
-            SUM(CASE WHEN has_tshirt = 'yes' THEN 1 ELSE 0 END) as has_tshirt,
-            SUM(CASE WHEN has_swag = 'yes' THEN 1 ELSE 0 END) as has_swag
-            FROM $table_name";
-
-        $result = $wpdb->get_row($sql);
-
-        return $result;
-    }
-
-    public function update($attendeeId, $type, $value)
-    {
-        global $wpdb, $current_user;
-
-        $table_name = $wpdb->prefix . 'scan_attendee_list';
-
-        $data = array(
-            $type => $value,
-            'update_by' => $current_user->ID,
-            'updated_at' => current_time('mysql'),
-        );
-
-        $where = array(
-            'attendee_id' => $attendeeId,
-        );
-
-        return $wpdb->update($table_name, $data, $where);
-    }
-
-    public function addEmailToAttendee($attendeeId, $email)
-    {
-        global $wpdb, $current_user;
-
-        $table_name = $wpdb->prefix . 'scan_attendee_list';
-
-        $data = array(
-            'email' => $email,
-            'update_by' => $current_user->ID,
-            'updated_at'     => current_time('mysql')
-        );
-
-        $where = array(
-            'attendee_id' => $attendeeId,
-        );
-
-        return $wpdb->update($table_name, $data, $where);
-    }
-
-    public function addNameAttendee($attendeeId, $firstName)
-    {
-        global $wpdb, $current_user;
-
-        $table_name = $wpdb->prefix . 'scan_attendee_list';
-
-        $data = array(
-            'first_name' => $firstName,
-            'update_by' => $current_user->ID,
-            'updated_at'     => current_time('mysql')
-        );
-
-        $where = array(
-            'attendee_id' => $attendeeId,
-        );
-
-        return $wpdb->update($table_name, $data, $where);
+        $gameTable = $wpdb->prefix . 'scan_attendee_game_score';
+        $sql = "SELECT COUNT(*) as total FROM $gameTable";
+        $playersCount = $wpdb->get_row($sql);
+        return $playersCount;
     }
 }

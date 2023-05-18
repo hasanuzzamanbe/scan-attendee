@@ -98,9 +98,12 @@ class AdminAjaxHandler
     {
         $info = (new AttendeeModel())->getInfo();
 
+        $playersCount = (new GameScoreModel())->playersCount();
+
         wp_send_json_success(
             array(
-                'info' => $info
+                'info' => $info,
+                'players_count' => $playersCount
             )
         );
     }

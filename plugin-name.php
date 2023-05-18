@@ -86,7 +86,27 @@ if (!defined('SCANATTENDEE_VERSION')) {
             try {
                 $gameScoreModel = new GameScoreModel();
                 $score = $this->decryptValue($_POST['score'], 'AuthLabAuthLab12');
-                $response = $gameScoreModel->addScore($_POST['email'], $_POST['attendee_id'], $_POST['name'], $score);
+
+                $email = sanitize_email($_POST['email']);
+                $attendee_id = sanitize_text_field($_POST['attendee_id']);
+                $name = sanitize_text_field($_POST['name']);
+
+                $response = $gameScoreModel->addScore(
+                    $email,
+                    $attendee_id,
+                    $name,
+                    $score
+                );
+                
+                //add to crm contacts
+                $crm = new \scanAttendee\Classes\CRM();
+                $crm->addContact(array(
+                    'email' => $email,
+                    'name' => $name,
+                    'attendee_id' => $attendee_id,
+                    'score' => $score
+                ));
+
                 return wp_send_json_success($response);
             } catch (Exception $e) {
                 return wp_send_json_error([

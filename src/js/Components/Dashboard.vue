@@ -77,7 +77,7 @@
         </el-dialog>
 
         <el-dialog @open="getInfo" width="300px" :visible.sync="showStats">
-            <Stat :info="info" :fetching="fetching"></Stat>
+            <Stat :info="info" :playersCount="playersCount" :fetching="fetching"></Stat>
         </el-dialog>
   </div>
 </template>
@@ -101,7 +101,8 @@ export default {
       attendee: {
       },
       scanId: '',
-      lastError: ''
+      lastError: '',
+      playersCount: 0
     }
   },
   components: {
@@ -117,6 +118,7 @@ export default {
       })
         .then(response => {
           this.info = response.data.info
+          this.playersCount = parseInt(response.data.players_count.total)
           this.fetching = false
         })
         .always(() => {

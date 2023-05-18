@@ -27,6 +27,9 @@
               <td>Total Attendee</td>
               <td>{{ info.total }}</td>
             </tr>
+            <tr>
+             <p style="color: green;"> Total Players: {{ playersCount }}</p>
+            </tr>
           </table>
         </div>
       </div>
@@ -44,6 +47,10 @@ export default {
     fetching: {
       type: Boolean,
       default: false
+    },
+    playersCount: {
+      type: Number,
+      default: 0
     }
   },
 }
