@@ -29,14 +29,16 @@ function setup() {
     bombSpriteData = loadJSON(window.scanAttendeeGameUrl+'/assets/js/game/sprite/bomb.json');
 
 
-    bg = loadImage(window.scanAttendeeGameUrl+'/assets/js/game/images/bg-mobile.jpg');
+    bg = loadImage(window.scanAttendeeGameUrl+'/assets/js/game/images/test.png');
 
 }
 
 function draw() {
     if(isEmailSubmitted){
-        background(bg);
+        background(bg)
     }
+    
+    
     if (gameState === 'initial') {
         if (startScreen === null) {
             startScreen = new StartScreen();
