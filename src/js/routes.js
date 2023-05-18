@@ -1,6 +1,7 @@
 import Dashboard from './Components/Dashboard';
 import Attendees from './Components/StatsInfo';
 import Permissions from './Components/Permissions.vue';
+import Help from './Components/Help';
 
 export const routes = [
     {
@@ -17,5 +18,10 @@ export const routes = [
         path: '/permissions',
         name: 'permissions',
         component: Permissions
+    },
+    {
+        path: '/help',
+        name: 'help',
+        component: Help
     }
 ];

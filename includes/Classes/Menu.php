@@ -39,6 +39,13 @@ class Menu
             $menuPermission,
             'admin.php?page=scan-attendee.php#/attendees',
         );
+
+        $submenu['scan-attendee.php']['help'] = array(
+            __('Help', 'textdomain'),
+            $menuPermission,
+            'admin.php?page=scan-attendee.php#/help',
+        );
+        
     }
 
     public function enqueueAssets()

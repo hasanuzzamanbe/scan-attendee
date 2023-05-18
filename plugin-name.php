@@ -4,7 +4,7 @@
 Plugin Name: scan-attendee
 Plugin URI: #
 Description: A WordPress boilerplate plugin with Vue js.
-Version: 1.0.0
+Version: 1.0.2
 Author: #
 Author URI: #
 License: A "Slug" license name e.g. GPL2
@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) {
 }
 if (!defined('SCANATTENDEE_VERSION')) {
     define('SCANATTENDEE_VERSION_LITE', true);
-    define('SCANATTENDEE_VERSION', '1.0.0');
+    define('SCANATTENDEE_VERSION', '1.0.2');
     define('SCANATTENDEE_MAIN_FILE', __FILE__);
     define('SCANATTENDEE_URL', plugin_dir_url(__FILE__));
     define('SCANATTENDEE_DIR', plugin_dir_path(__FILE__));
@@ -97,7 +97,7 @@ if (!defined('SCANATTENDEE_VERSION')) {
                     $name,
                     $score
                 );
-                
+
                 //add to crm contacts
                 $crm = new \scanAttendee\Classes\CRM();
                 $crm->addContact(array(
@@ -189,7 +189,7 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 foreach ($results as $result) {
                     $html .= "<tr>
                                 <td>" . $result->attendee_id . "</td>
-                                <td>". $result->name . "</td>
+                                <td>" . $result->name . "</td>
                                 <td>" . $result->score . "</td>
                              </tr>";
                 }
@@ -197,15 +197,14 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 $html .= "</tbody>
 
                 </table>";
-                echo $html;
+                return $html;
             });
 
             add_shortcode(
                 'scan-attendee-game',
                 function () {
                     $this->initGame();
-
-                    echo '
+                    return '
                     <div class="parent-1">
                         <div class="parent-2">
                             <div class="game-container" id="game-container">
@@ -234,7 +233,6 @@ if (!defined('SCANATTENDEE_VERSION')) {
                                     </button>
                                 </div>
                                 <div class="game-end-button-container" id="game-end-button-container">
-                
                                 </div>
                             </div>
                         </div>
@@ -245,9 +243,6 @@ if (!defined('SCANATTENDEE_VERSION')) {
 
         public function initGame()
         {
-
-
-
             wp_enqueue_style('scan-attendee_game_css', SCANATTENDEE_URL . 'assets/css/style.css');
             wp_enqueue_script(
                 'scan-attendee-game-sweet-alert',
