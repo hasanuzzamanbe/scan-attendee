@@ -24,24 +24,26 @@ class GameOverScreen {
 
        let submitButton = createButton('Submit');
        submitButton.parent('game-end-button-container')
-       submitButton.mousePressed(()=>{
-           if(this.onSubmit) return
+       submitButton.mousePressed(async () => {
+           if (this.onSubmit) return
 
            this.onSubmit = true;
            let email = localStorage.getItem("game-email");
            let id = localStorage.getItem("game-attendee-id");
-            let ref = this;
-           jQuery.post( window.scanAttendeeGameAjaxUrl,
+           let ref = this;
+
+           const score = await this.encryptValue(this.score, 'AuthLabAuthLab12')
+           jQuery.post(window.scanAttendeeGameAjaxUrl,
                {
-                   action:'add_game_score',
+                   action: 'add_game_score',
                    email: email,
-                   score: this.score,
+                   score: score,
                    attendee_id: id
                },
-               function( resp ) {
+               function (resp) {
                    ref.onSubmit = false;
-                   if(resp.success){
-                        let data =  resp.data
+                   if (resp.success) {
+                       let data = resp.data
 
                        Swal.fire({
                            title: 'Success!',
@@ -49,7 +51,7 @@ class GameOverScreen {
                            icon: 'success',
                        })
                        //window.location.reload();
-                   }else{
+                   } else {
                        Swal.fire({
                            title: 'Error!',
                            text: 'Something went wrong',
@@ -57,10 +59,34 @@ class GameOverScreen {
                        })
                    }
 
-           });
+               });
 
 
        });
+    }
+
+    async encryptValue(value, secretKey) {
+        // Convert the value and secret key to ArrayBuffer objects
+        const encoder = new TextEncoder();
+        const valueData = encoder.encode(value);
+        const keyData = encoder.encode(secretKey);
+
+        // Import the secret key
+        const cryptoKey = await crypto.subtle.importKey('raw', keyData, 'AES-CBC', false, ['encrypt']);
+
+        // Generate an initialization vector (IV)
+        const iv = crypto.getRandomValues(new Uint8Array(16));
+
+        // Encrypt the value using AES-CBC algorithm with the secret key and IV
+        const encryptedData = await crypto.subtle.encrypt({ name: 'AES-CBC', iv }, cryptoKey, valueData);
+
+        // Concatenate the IV and encrypted data
+        const encryptedBytes = new Uint8Array(iv.byteLength + encryptedData.byteLength);
+        encryptedBytes.set(iv, 0);
+        encryptedBytes.set(new Uint8Array(encryptedData), iv.byteLength);
+
+        // Convert the encrypted value to a hex-encoded string
+        return Array.prototype.map.call(encryptedBytes, byte => ('00' + byte.toString(16)).slice(-2)).join('');
     }
 
     restartGame (){

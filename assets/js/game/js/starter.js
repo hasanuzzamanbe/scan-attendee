@@ -56,6 +56,7 @@ function draw() {
             gameOverScreen = new GameOverScreen(restartGame,score);
         }
         gameOverScreen.draw();
+
     }
 
 }
@@ -102,6 +103,7 @@ function onGameOver(newScore){
     isPlaying = false
     gameState = 'ended'
     gameScreen = null
+    noLoop()
 }
 
 

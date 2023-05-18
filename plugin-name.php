@@ -66,13 +66,30 @@ if (!defined('SCANATTENDEE_VERSION')) {
             require 'includes/Classes/GameScoreModel.php';
             try {
                 $gameScoreModel = new GameScoreModel();
-                $response = $gameScoreModel->addScore($_POST['email'],$_POST['attendee_id'],$_POST['score']);
+                $score = $this->decryptValue($_POST['score'],'AuthLabAuthLab12');
+                $response = $gameScoreModel->addScore($_POST['email'],$_POST['attendee_id'],$score);
                 return wp_send_json_success($response);
             }catch (Exception $e){
                 return wp_send_json_error([
                     'message' => 'Something Went Wrong'
                 ]);
             }
+        }
+
+
+        public function decryptValue($encryptedValue, $secretKey){
+            $encryptedData = hex2bin($encryptedValue);
+
+            // Extract the IV from the encrypted value
+            $ivSize = openssl_cipher_iv_length('AES-128-CBC');
+            $iv = substr($encryptedData, 0, $ivSize);
+            $ciphertext = substr($encryptedData, $ivSize);
+
+            // Decrypt the value using AES-CBC algorithm with the secret key and IV
+            $decrypted = openssl_decrypt($ciphertext, 'AES-128-CBC', $secretKey, OPENSSL_RAW_DATA, $iv);
+
+            // Return the decrypted value as a UTF-8 encoded string
+            return utf8_encode($decrypted);
         }
 
         public function adminHooks()
@@ -172,7 +189,7 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 'scan-attendee-game-starter',
                 SCANATTENDEE_URL . 'assets/js/game/js/starter.js',
                 array('jquery'),
-                SCANATTENDEE_VERSION,
+                time(),
                 true
             );
 
