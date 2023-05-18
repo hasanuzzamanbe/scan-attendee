@@ -72,13 +72,12 @@ class Activator
 
         $this->runSQL($sql, $table_name);
 
-
-
         $table_name = $wpdb->prefix . 'scan_attendee_game_score';
 
         $sql = "CREATE TABLE $table_name (
             `id` int NOT NULL AUTO_INCREMENT,
             `attendee_id`  varchar(100) NOT NULL,
+            `name`  varchar(100) NOT NULL,
             `email`  varchar(1000) NOT NULL,
             `score` bigint NOT NULL,
             `updated_at` TIMESTAMP NULL,

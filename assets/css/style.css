@@ -59,7 +59,7 @@ canvas{
     top: 50%;
     left: 0;
     width: 100%;
-    height: 50%;
+    height: 55%;
 
     display: flex;
     flex-direction: column;
@@ -83,7 +83,7 @@ canvas{
 .game_title{
     text-align: center;
 }
-.mail-input, .attendee-id-input{
+.mail-input, .attendee-id-input, .attendee-name-input{
     margin-top: 16px;
 
     background: transparent;
@@ -93,7 +93,7 @@ canvas{
     outline: none;
     padding: 6px;
 }
-.mail-validation, .attendee-id-validation{
+.mail-validation, .attendee-id-validation ,.attendee-name-validation{
     margin-top:6px;
     color: red;
 }

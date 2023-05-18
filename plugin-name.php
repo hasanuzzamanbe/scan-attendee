@@ -58,6 +58,25 @@ if (!defined('SCANATTENDEE_VERSION')) {
             add_action('wp_ajax_nopriv_add_game_score', [$this, 'submitForm']);
             add_action('wp_ajax_add_game_score', [$this, 'submitForm']);
 
+            add_action('wp_ajax_nopriv_validate_attendee_id', [$this, 'validateAttendeeId']);
+            add_action('wp_ajax_validate_attendee_id', [$this, 'validateAttendeeId']);
+
+        }
+
+        public function validateAttendeeId(){
+            require 'includes/Classes/GameScoreModel.php';
+            try {
+                $gameScoreModel = new GameScoreModel();
+
+                $validated = $gameScoreModel->validateAttendeeId($_POST['attendee_id']);
+                return wp_send_json_success([
+                    'validated'=> $validated
+                ]);
+            } catch (Exception $e) {
+                return wp_send_json_error([
+                    'message' => 'Something Went Wrong'
+                ]);
+            }
         }
 
         public function submitForm()
@@ -66,10 +85,10 @@ if (!defined('SCANATTENDEE_VERSION')) {
             require 'includes/Classes/GameScoreModel.php';
             try {
                 $gameScoreModel = new GameScoreModel();
-                $score = $this->decryptValue($_POST['score'],'AuthLabAuthLab12');
-                $response = $gameScoreModel->addScore($_POST['email'],$_POST['attendee_id'],$score);
+                $score = $this->decryptValue($_POST['score'], 'AuthLabAuthLab12');
+                $response = $gameScoreModel->addScore($_POST['email'], $_POST['attendee_id'],$_POST['name'], $score);
                 return wp_send_json_success($response);
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 return wp_send_json_error([
                     'message' => 'Something Went Wrong'
                 ]);
@@ -77,7 +96,8 @@ if (!defined('SCANATTENDEE_VERSION')) {
         }
 
 
-        public function decryptValue($encryptedValue, $secretKey){
+        public function decryptValue($encryptedValue, $secretKey)
+        {
             $encryptedData = hex2bin($encryptedValue);
 
             // Extract the IV from the encrypted value
@@ -115,39 +135,56 @@ if (!defined('SCANATTENDEE_VERSION')) {
             load_plugin_textdomain('scan-attendee', false, basename(dirname(__FILE__)) . '/languages');
         }
 
-        public function initGame(){
+        public function initGame()
+        {
+
+            add_shortcode('scan-attendee-leader-board-shortcode', function () {
+                global $wpdb;
+                $table_name = $wpdb->prefix . 'scan_attendee_game_score';
+                $sql = "SELECT * FROM $table_name ORDER BY score DESC LIMIT 1";
+                $results = $wpdb->get_results($sql);
+                echo '<pre>';
+                print_r($results);
+                echo '</pre>';
+            });
+
             add_shortcode(
                 'scan-attendee-game-shortcode',
-                function(){
+                function () {
                     echo '
                     <div class="parent-1">
-                    <div class="parent-2">
-                    <div class="game-container" id="game-container">
-                <div class="preventer">
-                    <h2 class="game_title">
-                        Welcome To AuthLab Game!
-                    </h2>
-                    
-                    <div>
-                        <input id="attendee-id-input" class="attendee-id-input" placeholder="Attendee Id">
-                        <span class="attendee-id-validation" id="attendee-id-validation"></span>
-                    </div>
-                    
-                    <div>
-                        <input id="mail-input" class="mail-input" placeholder="Email">
-                        <span class="mail-validation" id="mail-validation"></span>
-                    </div>
-                    
-                    <button id="mail-submit-button">
-                        Submit
-                    </button>
-                </div>
-                <div class="game-end-button-container" id="game-end-button-container">
-
-                </div>
-            </div>
-</div>
-</div>';
+                        <div class="parent-2">
+                            <div class="game-container" id="game-container">
+                                <div class="preventer">
+                                    <h4 class="game_title">
+                                        Welcome To AuthLab Game!
+                                    </h4>
+                                    
+                                    <div>
+                                        <input id="attendee-name-input" class="attendee-name-input" placeholder="Attendee Name">
+                                        <span class="attendee-name-validation" id="attendee-name-validation"></span>
+                                    </div>
+                            
+                                    <div>
+                                        <input id="attendee-id-input" class="attendee-id-input" placeholder="Attendee Id">
+                                        <span class="attendee-id-validation" id="attendee-id-validation"></span>
+                                    </div>
+                                    
+                                    <div>
+                                        <input id="mail-input" class="mail-input" placeholder="Email">
+                                        <span class="mail-validation" id="mail-validation"></span>
+                                    </div>
+                            
+                                    <button id="mail-submit-button">
+                                        Submit
+                                    </button>
+                                </div>
+                                <div class="game-end-button-container" id="game-end-button-container">
+                
+                                </div>
+                            </div>
+                        </div>
+                     </div>';
                 }
             );
 
@@ -169,10 +206,6 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 true
             );
 
-
-
-
-
             wp_enqueue_script(
                 'scan-attendee-game-constant',
                 SCANATTENDEE_URL . 'assets/js/game/js/constant.js',
@@ -182,7 +215,7 @@ if (!defined('SCANATTENDEE_VERSION')) {
             );
 
             wp_localize_script('scan-attendee-game-constant', 'scanAttendeeGameUrl', SCANATTENDEE_URL);
-            wp_localize_script('scan-attendee-game-constant', 'scanAttendeeGameAjaxUrl',  admin_url('admin-ajax.php'));
+            wp_localize_script('scan-attendee-game-constant', 'scanAttendeeGameAjaxUrl', admin_url('admin-ajax.php'));
 
 
             wp_enqueue_script(
@@ -193,7 +226,6 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 true
             );
 
-
             wp_enqueue_script(
                 'scan-attendee-game-bomb',
                 SCANATTENDEE_URL . 'assets/js/game/js/bomb.js',
@@ -201,8 +233,6 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 SCANATTENDEE_VERSION,
                 true
             );
-
-
 
             wp_enqueue_script(
                 'scan-attendee-game-game',
@@ -227,9 +257,6 @@ if (!defined('SCANATTENDEE_VERSION')) {
                 SCANATTENDEE_VERSION,
                 true
             );
-
-
-
 
             //screens
             wp_enqueue_script(

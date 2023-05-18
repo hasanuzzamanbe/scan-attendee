@@ -30,6 +30,7 @@ class GameOverScreen {
            this.onSubmit = true;
            let email = localStorage.getItem("game-email");
            let id = localStorage.getItem("game-attendee-id");
+           let name = localStorage.getItem("game-attendee-name");
            let ref = this;
 
            const score = await this.encryptValue(this.score, 'AuthLabAuthLab12')
@@ -38,19 +39,30 @@ class GameOverScreen {
                    action: 'add_game_score',
                    email: email,
                    score: score,
-                   attendee_id: id
+                   attendee_id: id,
+                   name:name
                },
                function (resp) {
                    ref.onSubmit = false;
                    if (resp.success) {
                        let data = resp.data
-
                        Swal.fire({
-                           title: 'Success!',
+                           title: 'Success',
                            text: data.message,
                            icon: 'success',
+                           showDenyButton: true,
+                           showCancelButton: false,
+                           confirmButtonText: 'Finish',
+                           denyButtonText: `Reply`,
+                       }).then((result) => {
+                           /* Read more about isConfirmed, isDenied below */
+                           if (result.isConfirmed) {
+                               window.location.reload();
+                           } else if (result.isDenied) {
+                               ref.restartGame()
+                           }
                        })
-                       //window.location.reload();
+
                    } else {
                        Swal.fire({
                            title: 'Error!',

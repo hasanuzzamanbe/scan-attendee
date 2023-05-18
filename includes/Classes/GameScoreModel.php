@@ -8,14 +8,14 @@ if (!defined('ABSPATH')) {
 
 class GameScoreModel
 {
-    public function addScore($email,$attendeeId, $score)
+    public function addScore($email,$attendeeId,$name, $score)
     {
         // find attendee if not exist then add
         global $wpdb, $current_user;
 
         $table_name = $wpdb->prefix . 'scan_attendee_game_score';
 
-        $attendee = $wpdb->get_row("SELECT * FROM $table_name WHERE email = '$email'");
+        $attendee = $wpdb->get_row("SELECT * FROM $table_name WHERE attendee_id = '$attendeeId'");
 
         if ($attendee) {
             $oldScore = $attendee->score;
@@ -30,7 +30,7 @@ class GameScoreModel
                     'updated_at' => current_time('mysql'),
                 );
                 $where = array(
-                    'email' => $email,
+                    'attendee_id' => $attendeeId,
                 );
                 $wpdb->update($table_name, $data, $where);
                 return array(
@@ -47,6 +47,7 @@ class GameScoreModel
                 array(
                     'attendee_id' => $attendeeId,
                     'email' => $email,
+                    'name' => $name,
                     'score' => $score,
                     'updated_at' => current_time('mysql'),
                 )
@@ -59,68 +60,17 @@ class GameScoreModel
         };
     }
 
-    public function get($attendeeId)
+    public function validateAttendeeId($attendeeId)
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'scan_attendee_list';
+        $table_name = $wpdb->prefix . 'scan_attendee_game_score';
         $sql = "SELECT * FROM $table_name WHERE attendee_id = " . $attendeeId;
 
         $result = $wpdb->get_row($sql);
-
-        if ($result->email) {
-            $result->gravatar = get_avatar_url(sanitize_email($result->email));
-        } else {
-            $result->gravatar = 'http://www.gravatar.com/avatar';
-        }
-
-        if ($result->update_by) {
-            $result->update_by_agent = get_user_by('id', $result->update_by)->display_name;
-        }
-
-        return $result;
+        return !$result;
     }
 
-    public function getAttendees()
-    {
-        global $wpdb;
-        $table_name = $wpdb->prefix . 'scan_attendee_list';
 
-        $pagination =  [
-            'current_page' =>  1,
-            'per_page' => 20,
-            'page_number' =>  1,
-            'total' => 0
-        ];
-
-        $search = $_REQUEST['search'] ? $_REQUEST['search'] : '';
-
-        $pagination = $_REQUEST['pagination'] ? $_REQUEST['pagination'] : $pagination;
-
-        $offset = ($pagination['current_page'] - 1) * $pagination['per_page'];
-
-        $sql = "SELECT * FROM $table_name WHERE first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR attendee_id LIKE '%$search%' OR email LIKE '%$search%' OR ticket_type LIKE '%$search%' LIMIT $offset, " . $pagination['per_page'];
-
-        $results = $wpdb->get_results($sql);
-
-        foreach ($results as $result) {
-            if ($result->email) {
-                $result->gravatar = get_avatar_url(sanitize_email($result->email));
-            }
-
-            if ($result->update_by) {
-                $result->update_by_agent = get_user_by('id', $result->update_by)->display_name;
-            }
-        }
-
-        //get total
-        $sql = "SELECT COUNT(*) as total FROM $table_name";
-        $total = $wpdb->get_row($sql);
-
-        return array(
-            'attendees' => $results,
-            'total' => $total->total,
-        );
-    }
 
     public function getInfo()
     {
