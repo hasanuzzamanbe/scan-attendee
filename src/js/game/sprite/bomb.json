@@ -1,0 +1,92 @@
+{"frames": [
+
+{
+	"filename": "Bomb-01.png",
+	"frame": {"x":0,"y":0,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-02.png",
+	"frame": {"x":938,"y":0,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-03.png",
+	"frame": {"x":1876,"y":0,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-04.png",
+	"frame": {"x":2814,"y":0,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-05.png",
+	"frame": {"x":0,"y":938,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-06.png",
+	"frame": {"x":938,"y":938,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-07.png",
+	"frame": {"x":1876,"y":938,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-08.png",
+	"frame": {"x":2814,"y":938,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-09.png",
+	"frame": {"x":0,"y":1876,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+},
+{
+	"filename": "Bomb-10.png",
+	"frame": {"x":938,"y":1876,"w":938,"h":938},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":938,"h":938},
+	"sourceSize": {"w":938,"h":938}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bomb.png",
+	"format": "RGBA8888",
+	"size": {"w":3752,"h":2814},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8ac1a5700197a1a75f3f21380292016b:f9da5cb49f9e81731ea61da8c4a6716f:92c3bc3c615dfb7165e7ca5591ac2c92$"
+}
+}

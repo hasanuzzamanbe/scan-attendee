@@ -42,6 +42,7 @@ class Activator
         */
 
         $this->createAttendeeTable();
+        $this->gateScoreTable();
     }
 
     public function createAttendeeTable()
@@ -66,6 +67,25 @@ class Activator
             `has_tshirt` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `has_swag` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
             `update_by` int NOT NULL,
+            `updated_at` TIMESTAMP NULL,
+            PRIMARY KEY (`id`)
+        ) $charset_collate;";
+
+        $this->runSQL($sql, $table_name);
+    }
+
+    public function gateScoreTable()
+    {
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+        $table_name = $wpdb->prefix . 'scan_attendee_game_score';
+
+        $sql = "CREATE TABLE $table_name (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `attendee_id`  varchar(100) NOT NULL,
+            `name`  varchar(100) NOT NULL,
+            `email`  varchar(1000) NOT NULL,
+            `score` bigint NOT NULL,
             `updated_at` TIMESTAMP NULL,
             PRIMARY KEY (`id`)
         ) $charset_collate;";
