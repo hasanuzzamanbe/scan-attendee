@@ -11,8 +11,9 @@ class Menu
 
     public function addMenus()
     {
-        $menuPermission = AccessControl::hasTopLevelMenuPermission();
-        if (!$menuPermission) {
+        $menuPermission = 'edit_posts';
+
+        if (!current_user_can($menuPermission)) {
             return;
         }
 

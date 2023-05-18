@@ -29,7 +29,7 @@
         </div>
         <!-- <p class="t-shirt-size">T-shirt: {{ attendee.t_shirt_size }}</p> -->
         <div class="action" style="margin-bottom: 23px">
-          <div>
+          <!-- <div>
             <input
               type="checkbox"
               @change="update"
@@ -39,7 +39,7 @@
               false-value="no"
             />
             <label for="has_giftbox">GiftBox</label>
-          </div>
+          </div> -->
 
           <div>
             <input
@@ -67,14 +67,13 @@
         </div>
 
 
-        <p v-if="attendee.has_giftbox !== 'yes' 
-          || attendee.has_tshirt !== 'yes' 
+        <p v-if="attendee.has_tshirt !== 'yes' 
           || attendee.has_swag !== 'yes'" 
           style="margin-top: 10px;
             background: #a9ffa9;
             padding: 10px;">
             Please distribute 
-            <span v-if="attendee.has_giftbox !== 'yes'">GiftBox</span>
+            <!-- <span v-if="attendee.has_giftbox !== 'yes'">GiftBox</span> -->
             <span v-if="attendee.has_tshirt !== 'yes'">,T-Shirt</span>
             <span v-if="attendee.has_swag !== 'yes'">,Swag</span> to the attendee.
         </p>

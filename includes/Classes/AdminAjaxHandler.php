@@ -21,6 +21,8 @@ class AdminAjaxHandler
             'get_info' => 'getInfo',
             'get_attendees' => 'getAttendees',
             'upload_csv' => 'uploadCsv',
+            'get_permissions' => 'getPermissions',
+            'update_permissions' => 'updatePermissions',
         );
 
         if (isset($validRoutes[$route])) {
@@ -28,6 +30,25 @@ class AdminAjaxHandler
             return $this->{$validRoutes[$route]}();
         }
         do_action('scan-attendee/admin_ajax_handler_catch', $route);
+    }
+
+    public function updatePermissions()
+    {
+        $res = (new AccessControl())->setAccessRoles($_REQUEST);
+
+        wp_send_json_success(
+            $res
+        );
+    }
+
+
+    public function getPermissions()
+    {
+        $roles = (new AccessControl())->getAccessRoles();
+
+        wp_send_json_success(
+            array('roles' => $roles)
+        );
     }
 
     public function addAttendee()

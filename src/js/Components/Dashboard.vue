@@ -298,7 +298,10 @@ div#scan-attendee_app {
 
 .scan_attendee_profile div.action {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+.scan_attendee_profile div.action div{
+    margin: 0px 5px;
 }
 .scan_attendee_profile h4.name {
     font-size: 26px;

@@ -19,10 +19,10 @@
               <td>Swag</td>
               <td>{{ info.has_swag }}</td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td>Gift box</td>
               <td>{{ info.has_giftbox }}</td>
-            </tr>
+            </tr> -->
             <tr>
               <td>Total Attendee</td>
               <td>{{ info.total }}</td>
